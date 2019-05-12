@@ -1,6 +1,8 @@
 //Assuming that all rates and discounts are mentioned in the form of Kg, Lt and Numbers
+// Assuming that standard of maintaining of gms and ml
 
 import java.util.*;
+import java.io.*;
 
 public class Billing {
 	
@@ -10,10 +12,50 @@ public class Billing {
 		//itemMap = new HashMap<>();
 	}
 	public static void main(String args[]) {
+		String input_line1 = "", input_line2 = "";
+		
+		/**
+			When input data via text file is given
+			- Assuming that that the order is written in 2 line format as mentioned in the problem statement demo input 
+			- Where first line contains Customer name, second line has order details
+		 */
+		if (args.length > 0) {
+			try {
+				String path = System.getProperty("user.dir");
+				String file_name = args[0];
+				BufferedReader reader = new BufferedReader(new FileReader(path + "/" + file_name));
+				input_line1 = reader.readLine();
+				input_line2 = reader.readLine();
+				reader.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		/**
+			When no input data is provided via text file
+			- Considering the same input as mentioned in problem statement
+		*/
+		} else {
+			input_line1 = "Customer Anish Kumar buys following items";
+			input_line2 = "Apple 6Kg, Orange 2Kg, Potato 14Kg, Tomato 3Kg, Cow Milk 8Lt, Gouda 2Kg";
+		}
+		System.out.println(input_line1);
+		System.out.println(input_line2);
+		
 		init();
 		Item tempItem;
-		String orderStr = "Apple 6Kg, Orange 2Kg, Potato 14Kg, Tomato 3Kg, Cow Milk 8Lt, Gouda 2Kg";
-		String[] orders = orderStr.split(",");
+
+		// To get customer name
+		String customer_name = "";
+		String customer_detail[] = input_line1.split(" ");
+		
+		for (int i=1;i < customer_detail.length; i++) {
+			if (customer_detail[i].equalsIgnoreCase("buys"))
+				break;
+			customer_name += customer_detail[i] + " ";
+		}
+		
+		String[] orders = input_line2.split(",");
 		
 		List<BuiedItems> list = new ArrayList<>();
 		
@@ -66,6 +108,7 @@ public class Billing {
 		
 		double real_amount = 0;
 		double discounted_amount = 0;
+		System.out.println("Customer: " + customer_name);
 		System.out.println("Item \t\t Qty \t Amount");
 		for(BuiedItems item : list) {
 			System.out.println(item.item + "\t\t" + item.quantity + item.unit + "\t" + item.billed_amount);
